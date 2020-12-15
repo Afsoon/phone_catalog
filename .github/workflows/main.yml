@@ -37,13 +37,13 @@ jobs:
         key: ${{ runner.os }}-mix-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
         restore-keys: ${{ runner.os }}-mix-
     - name: Install JS dependencies
-      uses: CultureHQ/actions-yarn@v1.0.1
+      uses: Borales/actions-yarn@v2.3.0
       with:
-        args: --cwd ./assets install
+        cmd: --cwd ./assets install
     - name: JS Test
-      uses: CultureHQ/actions-yarn@v1.0.1
+      uses: Borales/actions-yarn@v2.3.0
       with:
-        args: --cwd ./assets test
+        cmd: --cwd ./assets test
     - run: mix local.rebar --force
     - run: mix local.hex --force
     - name: Install Elixir dependencies
