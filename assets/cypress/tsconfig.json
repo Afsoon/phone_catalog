@@ -1,0 +1,14 @@
+{
+  "extends": "../tsconfig.json",
+  "include": ["./**/*.ts", "./support/commands.ts",],
+  "exclude": [],
+  "compilerOptions": {
+    "types": ["cypress", "@types/testing-library__cypress", "@types/node"],
+    "lib": ["es2015", "dom"],
+    "isolatedModules": false,
+    "allowJs": true,
+    "noEmit": true,
+    "noImplicitAny": false,
+    "jsx": "react"
+  }
+}

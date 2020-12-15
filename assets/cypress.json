@@ -1,0 +1,17 @@
+{
+  "baseUrl": "http://localhost:3000",
+  "projectId": "8s9aet",
+  "integrationFolder": "cypress/integration",
+  "viewportHeight": 1000,
+  "viewportWidth": 1280,
+  "firefoxGcInterval": null,
+  "retries": {
+    "runMode": 2,
+    "openMode": 1
+  },
+  "env": {
+    "codeCoverage": {
+      "url": "http://localhost:3001/__coverage__"
+    }
+  }
+}
