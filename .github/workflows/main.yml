@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    name: test
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:alpine
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_DB: phone_catalog_dev
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+    env:
+      MIX_ENV: test
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Elixir
+      uses: actions/setup-elixir@v1
+      with:
+        elixir-version: '1.11.1' # Define the elixir version [required]
+        otp-version: '23.1.1' # Define the OTP version [required]
+    - name: Restore dependencies cache
+      uses: actions/cache@v2
+      with:
+        path: deps
+        key: ${{ runner.os }}-mix-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
+        restore-keys: ${{ runner.os }}-mix-
+    - name: Install JS dependencies
+      uses: CultureHQ/actions-yarn@v1.0.1
+      with:
+        args: --cwd ./assets install
+    - name: JS Test
+      uses: CultureHQ/actions-yarn@v1.0.1
+      with:
+        args: --cwd ./assets test
+    - run: mix local.rebar --force
+    - run: mix local.hex --force
+    - name: Install Elixir dependencies
+      run: mix deps.get
+    - name: Run Elixir tests
+      run: mix test
