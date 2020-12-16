@@ -6,7 +6,8 @@ ADD mix.exs mix.lock ./
 RUN mix do deps.get, deps.compile
 
 ADD assets/package.json assets/
-RUN cd assets && yarn install
+ADD assets/yarn.lock assets/
+RUN yarn --cwd ./assets install
 
 CMD ["mix", "ecto.create"]
 CMD ["mix", "phx.server"]
