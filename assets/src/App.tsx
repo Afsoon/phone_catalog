@@ -1,10 +1,10 @@
 import * as React from "react"
-import Detail from "./pages/Detail"
+import Form from "./pages/Form"
 
 function App() {
   return (
     <React.Fragment>
-      <Detail />
+      <Form />
     </React.Fragment>
   )
 }
