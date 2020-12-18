@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react"
 import { Button } from "reakit"
+import { Link } from "react-router-dom"
 import { Header } from "../components/Header"
 import Text from "../components/Text"
 import AppShell from "../components/AppShell"
@@ -10,8 +10,7 @@ import {
   DialogDisclosure,
   DialogBackdrop,
 } from "reakit/Dialog"
-
-const getPhones = async () => await fetch("http://localhost:3000/phones", {})
+import { useShowOnePhone, useDeletePhone } from "../hooks/api"
 
 const HeaderDetail = () => {
   return (
@@ -25,6 +24,7 @@ const HeaderDetail = () => {
 
 const DeletePhone = () => {
   const dialog = useDialogState()
+  const mutation = useDeletePhone()
   return (
     <>
       <DialogDisclosure
@@ -63,9 +63,9 @@ const DeletePhone = () => {
                   aria-hidden="true"
                 >
                   <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
                     d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
                   />
                 </svg>
@@ -88,7 +88,7 @@ const DeletePhone = () => {
             <div className="mt-5 sm:mt-4 sm:ml-10 sm:pl-4 sm:flex">
               <Button
                 onClick={() => {
-                  alert("Discarded")
+                  mutation.mutate(0)
                   dialog.hide()
                 }}
                 className="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:w-auto sm:text-sm"
@@ -121,23 +121,34 @@ const EditPhone = () => {
 }
 
 const ContentDetail = () => {
-  const [, setState] = useState([])
-  useEffect(() => {
-    const fetch = async () => {
-      const res = await getPhones()
-      setState(await res.json())
-    }
-    fetch()
-  }, [])
+  console.log(useShowOnePhone({ id: 0 }))
 
   return (
     <main className="row-span-3 row-start-4 -mt-32 overflow-hidden h-full">
       <div className="max-w-7xl xl:max-w-6xl 2xl:max-w-5xl mx-auto pb-12 px-4 sm:px-6 lg:px-8 h-full">
         <div className="overflow-auto h-full bg-white rounded-lg shadow px-5 py-6 sm:px-6">
           <div className="pb-5 border-b border-gray-200 sm:flex sm:items-center sm:justify-between">
-            <h3 className="text-lg leading-6 font-medium text-gray-900">
-              iPhone X
-            </h3>
+            <Link
+              to="/"
+              className="mt-3 sm:mt-0 sm:ml-4 border-transparent inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300"
+            >
+              <svg
+                className="mr-1 h-5 w-5 text-gray-400"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M7.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l2.293 2.293a1 1 0 010 1.414z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              <h2 className="text-2xl ml-2 leading-6 font-medium text-gray-900">
+                iPhone X
+              </h2>
+            </Link>
             <div className="mt-3 flex sm:mt-0 sm:ml-4">
               <DeletePhone />
               <EditPhone />

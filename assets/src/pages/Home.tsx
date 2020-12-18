@@ -1,18 +1,10 @@
-import { useEffect, useState } from "react"
-import { Button } from "reakit"
-import {
-  unstable_useGridState as useGridState,
-  unstable_Grid as Grid,
-  unstable_GridRow as GridRow,
-  unstable_GridCell as GridCell,
-} from "reakit/Grid"
+import { Link } from "react-router-dom"
 import PhoneCardInformation from "../components/PhoneCardInformation"
 import { Header, SubHeader } from "../components/Header"
 import Text from "../components/Text"
 import AppShell from "../components/AppShell"
 import { Footer, FooterActionOnMobile } from "../components/Footer"
-
-const getPhones = async () => await fetch("http://localhost:3000/phones", {})
+import { useListPhones } from "../hooks/api"
 
 const HeaderHome = () => {
   return (
@@ -39,154 +31,57 @@ const FooterHome = () => {
 
 const AddPhone = () => {
   return (
-    <Button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700">
+    <Link
+      className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700"
+      to="/new"
+    >
       Añadir teléfono
-    </Button>
+    </Link>
   )
 }
 
 const ContentHome = () => {
-  const [, setState] = useState([])
-  useEffect(() => {
-    const fetch = async () => {
-      const res = await getPhones()
-      setState(await res.json())
-    }
-    fetch()
-  }, [])
-  const grid = useGridState()
+  const { data, isFetching, isError } = useListPhones()
+
+  if (isFetching) {
+    return <div>Cargando</div>
+  }
+
+  if (isError) {
+    return <div>Error</div>
+  }
 
   return (
     <main className="row-span-3 row-start-4 -mt-32 overflow-hidden h-full">
-      <Grid
-        {...grid}
+      <div
         aria-label="Phone Catalog"
         className="max-w-7xl mx-auto pb-12 px-4 sm:px-6 lg:px-8 h-full"
       >
-        <GridRow
-          {...grid}
-          as="ul"
-          className="h-full overflow-auto bg-white rounded-lg grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 grid-flow-row gap-4 list-none py-4"
-        >
-          <GridCell
-            {...grid}
-            as="li"
-            className="flex flex-col w-full shadow-lg rounded-sm bg-white"
-          >
-            <PhoneCardInformation
-              src="https://images.unsplash.com/photo-1512054502232-10a0a035d672?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1400&q=80"
-              alt=""
-              productName="iPhone X"
-              price={800}
-              manufacturer="Apple"
-            />
-          </GridCell>
-          <GridCell
-            {...grid}
-            as="li"
-            className="flex flex-col w-full shadow-lg rounded-sm bg-white"
-          >
-            <PhoneCardInformation
-              src="https://images.unsplash.com/photo-1512054502232-10a0a035d672?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1400&q=80"
-              alt=""
-              productName="iPhone X"
-              price={800}
-              manufacturer="Apple"
-            />
-          </GridCell>
-          <GridCell
-            {...grid}
-            as="li"
-            className="flex flex-col w-full shadow-lg rounded-sm bg-white"
-          >
-            <PhoneCardInformation
-              src="https://images.unsplash.com/photo-1512054502232-10a0a035d672?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1400&q=80"
-              alt=""
-              productName="iPhone X"
-              price={800}
-              manufacturer="Apple"
-            />
-          </GridCell>
-          <GridCell
-            {...grid}
-            as="li"
-            className="flex flex-col w-full shadow-lg rounded-sm bg-white"
-          >
-            <PhoneCardInformation
-              src="https://images.unsplash.com/photo-1512054502232-10a0a035d672?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1400&q=80"
-              alt=""
-              productName="iPhone X"
-              price={800}
-              manufacturer="Apple"
-            />
-          </GridCell>
-          <GridCell
-            {...grid}
-            as="li"
-            className="flex flex-col w-full shadow-lg rounded-sm bg-white"
-          >
-            <PhoneCardInformation
-              src="https://images.unsplash.com/photo-1512054502232-10a0a035d672?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1400&q=80"
-              alt=""
-              productName="iPhone X"
-              price={800}
-              manufacturer="Apple"
-            />
-          </GridCell>
-          <GridCell
-            {...grid}
-            as="li"
-            className="flex flex-col w-full shadow-lg rounded-sm bg-white"
-          >
-            <PhoneCardInformation
-              src="https://images.unsplash.com/photo-1512054502232-10a0a035d672?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1400&q=80"
-              alt=""
-              productName="iPhone X"
-              price={800}
-              manufacturer="Apple"
-            />
-          </GridCell>
-          <GridCell
-            {...grid}
-            as="li"
-            className="flex flex-col w-full shadow-lg rounded-sm bg-white"
-          >
-            <PhoneCardInformation
-              src="https://images.unsplash.com/photo-1512054502232-10a0a035d672?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1400&q=80"
-              alt=""
-              productName="iPhone X"
-              price={800}
-              manufacturer="Apple"
-            />
-          </GridCell>
-          <GridCell
-            {...grid}
-            as="li"
-            className="flex flex-col w-full shadow-lg rounded-sm bg-white"
-          >
-            <PhoneCardInformation
-              src="https://images.unsplash.com/photo-1512054502232-10a0a035d672?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1400&q=80"
-              alt=""
-              productName="iPhone X"
-              price={800}
-              manufacturer="Apple"
-            />
-          </GridCell>
-          <GridCell
-            {...grid}
-            as="li"
-            className="flex flex-col w-full shadow-lg rounded-sm bg-white"
-          >
-            <PhoneCardInformation
-              src="https://images.unsplash.com/photo-1512054502232-10a0a035d672?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1400&q=80"
-              alt=""
-              productName="iPhone X"
-              price={800}
-              manufacturer="Apple"
-            />
-          </GridCell>
-        </GridRow>
-      </Grid>
+        <div className="bg-white h-full overflow-auto rounded-lg shadow px-5 py-6 sm:px-6">
+          <div className="pb-5 border-b border-gray-200 rounded-lg sm:flex sm:items-center sm:justify-between">
+            <h2 className="text-2xl ml-2 leading-6 font-medium text-gray-900">
+              Listado de teléfonos
+            </h2>
+          </div>
+          <ul className="border-t border-gray-200 px-4 py-5 sm:px-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 grid-flow-row gap-4 list-none">
+            {data?.map((phone) => {
+              return (
+                <li key={`${phone.id}-${phone.name}`}>
+                  <Link to={`/phone/${phone.name}`}>
+                    <PhoneCardInformation
+                      src={phone.imageFileName}
+                      alt=""
+                      productName={phone.name}
+                      price={phone.price}
+                      manufacturer={phone.manufacturer}
+                    />
+                  </Link>
+                </li>
+              )
+            })}
+          </ul>
+        </div>
+      </div>
     </main>
   )
 }
