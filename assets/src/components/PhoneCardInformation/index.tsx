@@ -1,4 +1,3 @@
-import * as React from "react"
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 interface PhoneCardProps {
   src: string
@@ -16,7 +15,7 @@ const PhoneCardInformation: React.FC<PhoneCardProps> = ({
   manufacturer,
 }) => {
   return (
-    <React.Fragment>
+    <>
       <img src={src} alt={alt} />
       <div className="px-4 pb-2 space-y-1">
         <div className="text-md ">
@@ -32,7 +31,28 @@ const PhoneCardInformation: React.FC<PhoneCardProps> = ({
           {manufacturer}
         </div>
       </div>
-    </React.Fragment>
+    </>
+  )
+}
+
+export const LoadingCardSkeleton: React.FC = () => {
+  return (
+    <>
+      <div className="w-full h-24 bg-blue-400 rounded-none rounded-t-md" />
+      <div className="px-4 pb-2 pt-2 space-y-1">
+        <div className="bg-blue-400 h-4 w-3/4 rounded "></div>
+        <div className="bg-blue-400 h-4 w-3/4 rounded "></div>
+        <div className="bg-blue-400 h-4 w-3/4 rounded "></div>
+      </div>
+    </>
+  )
+}
+
+export const LoadingCard: React.FC = ({ children }) => {
+  return (
+    <li className="border border-blue-300 shadow rounded-md w-full mx-auto">
+      <div className="animate-pulse">{children}</div>
+    </li>
   )
 }
 

@@ -4,12 +4,14 @@ import { PhoneModel } from "../src/types"
 
 const getPhones = async () => {
   const res = await fetch("http://localhost:3000/phones", {})
-  return await res.json()
+  const json = await res.json()
+  return json.data
 }
 
 const getPhone = (id: number) => async () => {
   const res = await fetch(`http://localhost:3000/phones/${id}`, {})
-  return await res.json()
+  const json = await res.json()
+  return json.data
 }
 
 const deletePhone = async (id: number) => {

@@ -121,7 +121,7 @@ const EditPhone = () => {
 }
 
 const ContentDetail = () => {
-  console.log(useShowOnePhone({ id: 0 }))
+  useShowOnePhone({ id: 0 })
 
   return (
     <main className="row-span-3 row-start-4 -mt-32 overflow-hidden h-full">
