@@ -1,23 +1,10 @@
 import { Link } from "react-router-dom"
-import Header from "../components/Header"
-import Text from "../components/Text"
-import AppShell from "../components/AppShell"
-import { Footer } from "../components/Footer"
-import { CreatePhoneRequest } from "../src/types"
-import { useAddPhone } from "../hooks/api"
-import { validateAddPhoneForm } from "../src/validateForms"
-import { PhoneForm } from "../components/PhoneForm"
+import { CreatePhoneRequest } from "../../src/types"
+import { useAddPhone } from "./hooks"
+import { validateAddPhoneForm } from "../../src/validateForms"
+import { PhoneForm } from "../../components/PhoneForm"
 
-const HeaderHome = () => {
-  return (
-    <Header>
-      <Text as="h1" className="self-center text-6xl pt-2 pb-2 md:pb-0 lg:pt-8">
-        Phone Catalog
-      </Text>
-    </Header>
-  )
-}
-const ContentHome = () => {
+const Content = () => {
   const addPhone = useAddPhone()
   const submitForm = (values: CreatePhoneRequest) => {
     addPhone.mutate(values)
@@ -60,13 +47,7 @@ const ContentHome = () => {
 }
 
 function Home() {
-  return (
-    <AppShell>
-      <HeaderHome />
-      <ContentHome />
-      <Footer />
-    </AppShell>
-  )
+  return <Content />
 }
 
 export default Home

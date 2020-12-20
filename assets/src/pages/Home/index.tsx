@@ -2,28 +2,14 @@ import { Link } from "react-router-dom"
 import PhoneCardInformation, {
   LoadingCard,
   LoadingCardSkeleton,
-} from "../components/PhoneCardInformation"
-import Header from "../components/Header"
-import Text from "../components/Text"
-import AppShell from "../components/AppShell"
-import { Footer } from "../components/Footer"
-import { useListPhones } from "../hooks/api"
+} from "../../components/PhoneCardInformation"
+import { useListPhones } from "./hooks"
 import MainLayout, {
   MainHeaderLayout,
   MainHeaderActionsLayout,
   MainContentLayout,
   MainErrorMessage,
-} from "../components/Main"
-
-const HeaderHome = () => {
-  return (
-    <Header>
-      <Text as="h1" className="self-center text-6xl pt-2 pb-2 md:pb-0 lg:pt-8">
-        Phone Catalog
-      </Text>
-    </Header>
-  )
-}
+} from "../../components/Main"
 
 const AddPhone = () => {
   return (
@@ -152,14 +138,10 @@ const Content = () => {
 
 function Home() {
   return (
-    <AppShell>
-      <HeaderHome />
-      <MainLayout>
-        <MainHeader />
-        <Content />
-      </MainLayout>
-      <Footer />
-    </AppShell>
+    <MainLayout>
+      <MainHeader />
+      <Content />
+    </MainLayout>
   )
 }
 

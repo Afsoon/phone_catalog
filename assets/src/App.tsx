@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom"
 import { QueryClient, QueryClientProvider } from "react-query"
 import { ReactQueryDevtools } from "react-query/devtools"
 import Detail from "./pages/Detail"
-import Form from "./pages/Form"
+import Form from "./pages/AddPhone"
 import Home from "./pages/Home"
 import NotFound from "./pages/NotFound"
 
