@@ -157,8 +157,14 @@ const ContentHome = () => {
           <ul className="border-t border-gray-200 px-4 py-5 sm:px-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 grid-flow-row gap-4 list-none">
             {data?.map((phone) => {
               return (
-                <li key={`${phone.id}-${phone.name}`}>
-                  <Link to={`/phone/${phone.name}`}>
+                <li key={`${phone.id}-${phone.slug}`}>
+                  <Link
+                    to={{
+                      pathname: `/phone/${phone.slug}`,
+                      state: { phoneName: phone.name },
+                    }}
+                    title={`See details of ${phone.name}`}
+                  >
                     <PhoneCardInformation
                       src={phone.imageFileName}
                       alt=""

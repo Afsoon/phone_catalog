@@ -40,9 +40,9 @@ export const LoadingCardSkeleton: React.FC = () => {
     <>
       <div className="w-full h-24 bg-blue-400 rounded-none rounded-t-md" />
       <div className="px-4 pb-2 pt-2 space-y-1">
-        <div className="bg-blue-400 h-4 w-3/4 rounded "></div>
-        <div className="bg-blue-400 h-4 w-3/4 rounded "></div>
-        <div className="bg-blue-400 h-4 w-3/4 rounded "></div>
+        <div className="bg-blue-400 h-4 w-3/4 rounded"></div>
+        <div className="bg-blue-400 h-4 w-3/4 rounded"></div>
+        <div className="bg-blue-400 h-4 w-3/4 rounded"></div>
       </div>
     </>
   )

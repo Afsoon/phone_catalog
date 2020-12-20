@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "react-query"
+import { useHistory } from "react-router-dom"
 import { CATALOG_CACHE_KEY, formatDetailPhoneCacheKey } from "../src/constants"
-import { PhoneModel } from "../src/types"
+import { PhoneModel, CreatePhoneRequest } from "../src/types"
 
 const getPhones = async () => {
   const res = await fetch("http://localhost:3000/phones", {})
@@ -8,52 +9,91 @@ const getPhones = async () => {
   return json.data
 }
 
-const getPhone = (id: number) => async () => {
-  const res = await fetch(`http://localhost:3000/phones/${id}`, {})
+const getPhone = (slug: string) => async () => {
+  const res = await fetch(`http://localhost:3000/phones/${slug}`, {})
   const json = await res.json()
   return json.data
 }
 
-const deletePhone = async (id: number) => {
-  const res = await fetch(`http://localhost:3000/phones/${id}`, {
+const deletePhone = async (phone: PhoneModel): Promise<PhoneModel> => {
+  const res = await fetch(`http://localhost:3000/phones/${phone.id}`, {
     method: "DELETE",
   })
-  return await res.json()
+  const json = await res.json()
+  return json.data
 }
+
+const createPhone = async (
+  createPhoneRequest: CreatePhoneRequest,
+): Promise<PhoneModel> => {
+  const res = await fetch("http://localhost:3000/phones", {
+    method: "POST",
+    body: JSON.stringify(createPhoneRequest),
+  })
+  const json = await res.json()
+  return json.data
+}
+
+interface DeleteContext {
+  previousPhone: PhoneModel | undefined | null
+  previousListPhones: PhoneModel[] | undefined | null
+  phone: PhoneModel
+}
+
+type OptimisticDeleteContext = DeleteContext | undefined | null
 
 const useOptimisticDelete = () => {
   const queryClient = useQueryClient()
   return {
-    onMutate: async (newPhone: any) => {
-      const phoneUpdateKey = formatDetailPhoneCacheKey(newPhone)
+    onMutate: async (phone: PhoneModel) => {
+      const phoneUpdateKey = formatDetailPhoneCacheKey(phone)
       await queryClient.cancelQueries(phoneUpdateKey)
       await queryClient.cancelQueries(CATALOG_CACHE_KEY)
 
-      const previousPhone = queryClient.getQueryData(phoneUpdateKey)
-      const previousListPhones: any = queryClient.getQueryData(
-        CATALOG_CACHE_KEY,
-      )
+      const previousPhone:
+        | PhoneModel
+        | null
+        | undefined = queryClient.getQueryData(phoneUpdateKey)
+      const previousListPhones:
+        | PhoneModel[]
+        | null
+        | undefined = queryClient.getQueryData(CATALOG_CACHE_KEY)
 
-      queryClient.removeQueries(phoneUpdateKey)
-      queryClient.setQueryData(
-        CATALOG_CACHE_KEY,
-        previousListPhones.filter((phone: any) => {
-          return phone.id === newPhone.id
-        }),
-      )
-      return { previousPhone, previousListPhones, newPhone }
+      if (previousPhone) {
+        queryClient.removeQueries(phoneUpdateKey)
+      }
+
+      if (previousListPhones) {
+        queryClient.setQueryData(
+          CATALOG_CACHE_KEY,
+          previousListPhones?.filter((oldPhone: PhoneModel) => {
+            return phone.id === oldPhone.id
+          }),
+        )
+      }
+      return { previousPhone, previousListPhones, phone }
     },
 
-    onError: (_err: any, _newPhone: any, context: any) => {
-      queryClient.setQueryData(
-        formatDetailPhoneCacheKey(context.previousPhone),
-        context.previousPhone,
-      )
-      queryClient.setQueryData(CATALOG_CACHE_KEY, context.previousListPhones)
+    onError: (
+      _err: unknown,
+      _phone: PhoneModel,
+      context: OptimisticDeleteContext,
+    ) => {
+      if (context?.previousPhone) {
+        queryClient.setQueryData(
+          formatDetailPhoneCacheKey(context.previousPhone),
+          context.previousPhone,
+        )
+      }
+      if (context?.previousListPhones) {
+        queryClient.setQueryData(CATALOG_CACHE_KEY, context.previousListPhones)
+      }
     },
 
-    onSettled: (newPhone: any) => {
-      queryClient.invalidateQueries(formatDetailPhoneCacheKey(newPhone))
+    onSettled: (phone: PhoneModel | undefined) => {
+      if (phone) {
+        queryClient.invalidateQueries(formatDetailPhoneCacheKey(phone))
+      }
       queryClient.invalidateQueries(CATALOG_CACHE_KEY)
     },
   }
@@ -61,24 +101,27 @@ const useOptimisticDelete = () => {
 
 const useOptimisticAdd = () => {
   const queryClient = useQueryClient()
+  const history = useHistory()
   return {
-    onMutate: async (newPhone: any) => {
+    onSuccess: async (phone: PhoneModel) => {
+      const phoneUpdateKey = formatDetailPhoneCacheKey(phone)
+      await queryClient.cancelQueries(phoneUpdateKey)
       await queryClient.cancelQueries(CATALOG_CACHE_KEY)
 
-      const previousPhones = queryClient.getQueryData(CATALOG_CACHE_KEY)
+      const previousListPhones:
+        | PhoneModel[]
+        | null
+        | undefined = queryClient.getQueryData(CATALOG_CACHE_KEY)
 
-      queryClient.setQueryData(CATALOG_CACHE_KEY, (old: any) => [
-        ...old,
-        newPhone,
-      ])
+      if (previousListPhones) {
+        queryClient.setQueryData(CATALOG_CACHE_KEY, [
+          ...previousListPhones,
+          phone,
+        ])
+      }
 
-      return { previousPhones }
-    },
-    onError: (_err: any, _newTodo: any, context: any) => {
-      queryClient.setQueryData(CATALOG_CACHE_KEY, context.previousTodos)
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries(CATALOG_CACHE_KEY)
+      queryClient.setQueryData(formatDetailPhoneCacheKey(phone), phone)
+      history.push(`/phone/${phone.slug}`, { phoneName: phone.name })
     },
   }
 }
@@ -134,19 +177,26 @@ export const useListPhones = () => {
 }
 
 export const useShowOnePhone = (phone: any) => {
-  return useQuery(formatDetailPhoneCacheKey(phone), getPhone(phone.id))
+  return useQuery<PhoneModel>(
+    formatDetailPhoneCacheKey(phone),
+    getPhone(phone.slug),
+  )
 }
 
-export const useAddPhone = (phone: any) => {
+export const useAddPhone = () => {
   const configMutation = useOptimisticAdd()
-  return useMutation(() => {
-    return fetch("http://localhost:300/phones", phone)
-  }, configMutation)
+  return useMutation<PhoneModel, unknown, CreatePhoneRequest, unknown>(
+    createPhone,
+    configMutation,
+  )
 }
 
 export const useDeletePhone = () => {
   const configMutation = useOptimisticDelete()
-  return useMutation(deletePhone, configMutation)
+  return useMutation<PhoneModel, unknown, PhoneModel, OptimisticDeleteContext>(
+    deletePhone,
+    configMutation,
+  )
 }
 
 export const useUpdatePhone = (phone: any) => {

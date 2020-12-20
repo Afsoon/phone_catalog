@@ -8,6 +8,7 @@ export interface PhoneModel {
   screen: string
   ram: number
   price: number
+  slug: string
 }
 
 export interface CreatePhoneRequest {

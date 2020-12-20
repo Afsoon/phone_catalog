@@ -17,7 +17,7 @@ function App() {
             <Route path="/new">
               <Form />
             </Route>
-            <Route path="/phone/:phoneName">
+            <Route path="/phone/:slugPhoneName">
               <Detail />
             </Route>
             <Route exact path="/">
