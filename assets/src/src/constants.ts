@@ -1,6 +1,5 @@
-import { PhoneModel } from "./types"
 export const CATALOG_CACHE_KEY = "phone-catalog"
-export const formatDetailPhoneCacheKey = (phone: PhoneModel) => [
+export const formatDetailPhoneCacheKey = (slug: string) => [
   CATALOG_CACHE_KEY,
-  phone.slug,
+  slug,
 ]

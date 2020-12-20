@@ -159,13 +159,12 @@ export const handlers = [
     return res(ctx.json(responseStructure(phonesWithSlugName)))
   }),
   rest.get("/phones/:slugPhoneName", (req, res, ctx) => {
-    console.log(slugTable)
     const id = slugTable[req.params.slugPhoneName]
     const phone = findById(id)
     return res(ctx.json(responseStructure(phone)))
   }),
   rest.post("/phones", (req, res, ctx) => {
-    const id = phones.length
+    const id = phonesWithSlugName.length
     const body = JSON.parse(req.body)
     const slug = normalizeToSlugName(body.name)
     slugTable[slug] = id

@@ -80,6 +80,7 @@ const EmptyStateScreen: React.FC = () => {
         There isn't phones to display, please add one.
       </h3>
       <Link
+        title="Go to add phone form"
         className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 self-center"
         to="/new"
       >
@@ -136,7 +137,7 @@ const Content = () => {
             >
               <PhoneCardInformation
                 src={phone.imageFileName}
-                alt=""
+                alt={phone.name}
                 productName={phone.name}
                 price={phone.price}
                 manufacturer={phone.manufacturer}

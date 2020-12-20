@@ -7,6 +7,8 @@ interface PhoneFormProps {
   onValidate: (values: any) => void
   onSubmit: (values: any) => void
   toOnCancel: string
+  isLoading: boolean
+  cancelButtonTitle: string
 }
 
 export const PhoneForm: React.FC<PhoneFormProps> = ({
@@ -15,7 +17,10 @@ export const PhoneForm: React.FC<PhoneFormProps> = ({
   onSubmit,
   initialValues = undefined,
   toOnCancel,
+  isLoading,
+  cancelButtonTitle,
 }) => {
+  console.log(initialValues)
   return (
     <main className="row-span-3 row-start-4 -mt-32 overflow-hidden h-full">
       <div className="max-w-7xl mx-auto pb-12 px-4 sm:px-6 lg:px-8 h-full">
@@ -83,11 +88,15 @@ export const PhoneForm: React.FC<PhoneFormProps> = ({
             <div className="flex justify-end">
               <Link
                 to={toOnCancel}
+                title={cancelButtonTitle}
                 className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
                 Cancel
               </Link>
-              <SubmitButton className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+              <SubmitButton
+                disable={isLoading.toString()}
+                className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
                 Save
               </SubmitButton>
             </div>

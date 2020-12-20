@@ -1,10 +1,16 @@
-import { Link, useParams, useLocation, useHistory } from "react-router-dom"
-import { Button } from "reakit"
+import {
+  Link,
+  useLocation,
+  useHistory,
+  Switch,
+  Route,
+  useRouteMatch,
+} from "react-router-dom"
 import Header from "../components/Header"
 import Text from "../components/Text"
 import AppShell from "../components/AppShell"
 import { Footer } from "../components/Footer"
-import { useDeletePhone, useShowOnePhone } from "../hooks/api"
+import { useDeletePhone, useUpdatePhone, useShowOnePhone } from "../hooks/api"
 import MainLayout, {
   MainHeaderLayout,
   MainHeaderActionsLayout,
@@ -16,6 +22,9 @@ import { DeleteButton } from "../components/DeleteAction"
 import { useCallback } from "react"
 import { DialogStateReturn } from "reakit/Dialog"
 import { PhoneModel } from "../src/types"
+import { PhoneForm } from "../components/PhoneForm"
+import { CreatePhoneRequest } from "../src/types"
+import { validateAddPhoneForm } from "../src/validateForms"
 
 const HeaderDetail = () => {
   return (
@@ -27,14 +36,69 @@ const HeaderDetail = () => {
   )
 }
 
-const EditPhone = () => {
+interface EditPhoneProps {
+  slug: string
+  name: string
+}
+
+const EditForm = () => {
+  const { data, isError } = useShowOnePhone()
+  const updatePhone = useUpdatePhone()
+  const submitForm = (values: CreatePhoneRequest) => {
+    updatePhone.mutate(values)
+  }
+
+  if (!data || isError) {
+    return null
+  }
+
+  const { imageFileName, id, ...initialValues } = data
+
   return (
-    <Button
-      type="button"
+    <PhoneForm
+      toOnCancel="/"
+      onSubmit={submitForm}
+      onValidate={validateAddPhoneForm}
+      initialValues={initialValues}
+      isLoading={updatePhone.isLoading}
+      cancelButtonTitle="Cancel edition phone form and go back to see the phone information screen"
+    >
+      <div>
+        <Link
+          to="/"
+          className="mt-3 sm:mt-0 sm:ml-4 border-transparent inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300"
+        >
+          <svg
+            className="mr-1 h-5 w-5 text-gray-400"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path
+              fillRule="evenodd"
+              d="M7.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l2.293 2.293a1 1 0 010 1.414z"
+              clipRule="evenodd"
+            />
+          </svg>
+          <h2 className="text-2xl ml-2 leading-6 font-medium text-gray-900">
+            Edit Phone
+          </h2>
+        </Link>
+      </div>
+    </PhoneForm>
+  )
+}
+
+const EditPhone: React.FC<EditPhoneProps> = ({ slug, name }) => {
+  return (
+    <Link
+      to={`/phone/${slug}/edit`}
+      title={`Go to edition form to update ${name} information`}
       className="ml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
     >
-      Editar teléfono
-    </Button>
+      Edit Phone
+    </Link>
   )
 }
 
@@ -65,8 +129,7 @@ const BackButtonTitle: React.FC = ({ children }) => {
 }
 
 const Content = () => {
-  const { slugPhoneName } = useParams<{ slugPhoneName: string }>()
-  const { data, isLoading, isError } = useShowOnePhone({ slug: slugPhoneName })
+  const { data, isLoading, isError } = useShowOnePhone()
   const deletePhone = useDeletePhone()
   const location = useLocation<{ phoneName: string }>()
   const history = useHistory()
@@ -87,7 +150,9 @@ const Content = () => {
     return (
       <>
         <MainHeaderLayout>
-          <BackButtonTitle>{location.state.phoneName}</BackButtonTitle>
+          <BackButtonTitle>
+            {location?.state?.phoneName || "Loading"}
+          </BackButtonTitle>
         </MainHeaderLayout>
         <MainContentLayout>
           <GridTable className="animate-pulse">
@@ -134,7 +199,7 @@ const Content = () => {
   return (
     <>
       <MainHeaderLayout>
-        <BackButtonTitle>{location.state.phoneName}</BackButtonTitle>
+        <BackButtonTitle>{data.name}</BackButtonTitle>
         <MainHeaderActionsLayout>
           <DeleteButton
             onClick={onClick}
@@ -145,14 +210,14 @@ const Content = () => {
           >
             Delete Phone
           </DeleteButton>
-          <EditPhone />
+          <EditPhone slug={data.slug} name={data.name} />
         </MainHeaderActionsLayout>
       </MainHeaderLayout>
       <MainContentLayout>
         <GridTable>
           <img
             src="https://images.unsplash.com/photo-1512054502232-10a0a035d672?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1400&q=80"
-            alt=""
+            alt={data.name}
             className="sm:col-span-2 lg:col-span-1 lg:row-span-2 xl:row-span-2 object-cover"
           />
           <GridInformation className="sm:col-span-1" label="Screen">
@@ -180,12 +245,20 @@ const Content = () => {
 }
 
 function Detail() {
+  const match = useRouteMatch()
   return (
     <AppShell>
       <HeaderDetail />
-      <MainLayout>
-        <Content />
-      </MainLayout>
+      <Switch>
+        <Route path={`${match.path}/edit`}>
+          <EditForm />
+        </Route>
+        <Route path={`${match.path}`}>
+          <MainLayout>
+            <Content />
+          </MainLayout>
+        </Route>
+      </Switch>
       <Footer />
     </AppShell>
   )

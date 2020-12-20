@@ -18,9 +18,9 @@ const HeaderHome = () => {
   )
 }
 const ContentHome = () => {
-  const mutation = useAddPhone()
+  const addPhone = useAddPhone()
   const submitForm = (values: CreatePhoneRequest) => {
-    mutation.mutate(values)
+    addPhone.mutate(values)
   }
 
   return (
@@ -28,9 +28,12 @@ const ContentHome = () => {
       toOnCancel="/"
       onSubmit={submitForm}
       onValidate={validateAddPhoneForm}
+      isLoading={addPhone.isLoading}
+      cancelButtonTitle="Cancel the add phone form and go back to the home screen"
     >
       <div>
         <Link
+          title="Go back to home"
           to="/"
           className="mt-3 sm:mt-0 sm:ml-4 border-transparent inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300"
         >
