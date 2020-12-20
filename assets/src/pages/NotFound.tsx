@@ -1,29 +1,25 @@
 import Lottie from "lottie-react-web"
 import { Link } from "react-router-dom"
 import animation from "../Tissue/tissue.json"
-import { Header } from "../components/Header"
+import Header from "../components/Header"
 import Text from "../components/Text"
 import AppShell from "../components/AppShell"
 import { Footer } from "../components/Footer"
+import MainLayout, { MainContentLayout } from "../components/Main"
 
-const NotFoundHeader = () => {
+function NotFound() {
   return (
-    <Header>
-      <Text as="h1" className="self-center text-6xl pt-2 pb-2 md:pb-0 lg:pt-8">
-        Phone Catalog
-      </Text>
-    </Header>
-  )
-}
-
-const NotFoundContent = () => {
-  return (
-    <main className="row-span-3 row-start-4 -mt-32">
-      <div
-        aria-label="Phone Catalog"
-        className="max-w-7xl mx-auto pb-12 px-4 sm:px-6 lg:px-8"
-      >
-        <div className="bg-white rounded-lg flex flex-col shadow px-5 py-6 sm:px-6">
+    <AppShell>
+      <Header>
+        <Text
+          as="h1"
+          className="self-center text-6xl pt-2 pb-2 md:pb-0 lg:pt-8"
+        >
+          Phone Catalog
+        </Text>
+      </Header>
+      <MainLayout>
+        <MainContentLayout className="flex flex-col" withoutBorder>
           <h2 className="text-4xl font-semibold text-center">Page not found</h2>
           <Lottie
             options={{ animationData: animation }}
@@ -36,17 +32,8 @@ const NotFoundContent = () => {
           >
             Go to Home
           </Link>
-        </div>
-      </div>
-    </main>
-  )
-}
-
-function NotFound() {
-  return (
-    <AppShell>
-      <NotFoundHeader />
-      <NotFoundContent />
+        </MainContentLayout>
+      </MainLayout>
       <Footer />
     </AppShell>
   )

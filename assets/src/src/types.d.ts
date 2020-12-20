@@ -22,4 +22,17 @@ export interface CreatePhoneRequest {
   price: number
 }
 
+export interface DetailScreenRouteParams {
+  slugPhoneName: string
+}
+
+export interface DetailScreenRouteState {
+  phoneName: string
+}
+
+export interface DeletePhoneRequest {
+  onSucess: () => void
+  data: PhoneModel
+}
+
 export type UpdatePhoneRequest = Partial<CreatePhoneRequest>

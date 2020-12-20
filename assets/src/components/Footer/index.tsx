@@ -5,7 +5,3 @@ export const Footer: React.FC = ({ children }) => {
     </footer>
   )
 }
-
-export const FooterActionOnMobile: React.FC = ({ children }) => {
-  return <div className="md:hidden">{children}</div>
-}
