@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom"
 import { CreatePhoneRequest } from "./types"
 import { useAddPhone } from "./hooks"
-import { validateAddPhoneForm } from "./validateForm"
 import { PhoneForm } from "../../components/PhoneForm"
 import MainLayout, {
   MainHeaderLayout,
@@ -74,7 +73,6 @@ const Content = () => {
     <PhoneForm
       toOnCancel="/"
       onSubmit={submitForm}
-      onValidate={validateAddPhoneForm}
       isLoading={addPhone.isLoading}
       cancelButtonTitle="Cancel the add phone form and go back to the home screen"
     >

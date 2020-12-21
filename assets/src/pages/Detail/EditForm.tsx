@@ -2,7 +2,6 @@ import { Link, useParams } from "react-router-dom"
 import { useUpdatePhone, useShowOnePhone } from "./hooks"
 import { PhoneForm, PhoneFormLoading } from "../../components/PhoneForm"
 import { EditPhoneRequest, DetailScreenRouteParams } from "./types"
-import { validateEditPhoneForm } from "./validateForm"
 import MainLayout, {
   MainHeaderLayout,
   MainErrorMessage,
@@ -58,7 +57,6 @@ export const EditForm = () => {
       <PhoneFormLoading
         toOnCancel={toOnCancel}
         onSubmit={submitForm}
-        onValidate={validateEditPhoneForm}
         initialValues={undefined}
         isLoading={isLoading}
         cancelButtonTitle={cancelButtonTitle}
@@ -90,7 +88,6 @@ export const EditForm = () => {
     <PhoneForm
       toOnCancel={toOnCancel}
       onSubmit={submitForm}
-      onValidate={validateEditPhoneForm}
       initialValues={initialValues}
       isLoading={updatePhone.isLoading}
       cancelButtonTitle={cancelButtonTitle}

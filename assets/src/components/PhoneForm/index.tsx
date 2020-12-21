@@ -5,7 +5,6 @@ import { useForm } from "react-hook-form"
 
 interface PhoneFormProps {
   initialValues?: any
-  onValidate: (values: any) => void
   onSubmit: (values: any) => void
   toOnCancel: string
   isLoading: boolean
