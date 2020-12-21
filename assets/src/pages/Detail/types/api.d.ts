@@ -1,12 +1,9 @@
-export interface PhoneModel {
-  id: number
+export interface EditPhoneRequest {
   name: string
   manufacturer: string
   description: string
   color: string
-  imageFileName: string
   screen: string
   ram: number
   price: number
-  slug: string
 }

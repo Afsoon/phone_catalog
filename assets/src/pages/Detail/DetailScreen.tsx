@@ -3,7 +3,8 @@ import { useDeletePhone, useShowOnePhone } from "./hooks"
 import { DeleteButton } from "../../components/DeleteAction"
 import { useCallback } from "react"
 import { DialogStateReturn } from "reakit/Dialog"
-import { PhoneModel, DetailScreenRouteState } from "../../src/types"
+import { PhoneModel } from "../../src/types"
+import { DetailScreenRouteState } from "./types"
 import MainLayout, {
   MainHeaderLayout,
   MainHeaderActionsLayout,

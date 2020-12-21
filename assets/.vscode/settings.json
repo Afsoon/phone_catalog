@@ -2,5 +2,6 @@
 // And CRA a newer Typescript version, 4.1.3, so we have to use the CRA version's Typescript
 // instead
 {
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "eslint.enable": true
 }

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom"
-import { CreatePhoneRequest } from "../../src/types"
+import { CreatePhoneRequest } from "./types"
 import { useAddPhone } from "./hooks"
-import { validateAddPhoneForm } from "../../src/validateForms"
+import { validateAddPhoneForm } from "./validateForm"
 import { PhoneForm } from "../../components/PhoneForm"
 import MainLayout, {
   MainHeaderLayout,

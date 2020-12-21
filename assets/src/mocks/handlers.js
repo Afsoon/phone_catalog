@@ -181,6 +181,9 @@ export const handlers = [
   }),
   rest.delete("/phones/:phoneId", (req, res, ctx) => {
     const phone = findById(req.params.phoneId)
+    phonesWithSlugName = phonesWithSlugName.filter(
+      (phone) => phone.id !== Number(req.params.phoneId),
+    )
     return res(ctx.json(responseStructure(phone)))
   }),
   rest.put("/phones/:phoneId", (req, res, ctx) => {

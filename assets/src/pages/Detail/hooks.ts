@@ -4,13 +4,16 @@ import {
   CATALOG_CACHE_KEY,
   formatDetailPhoneCacheKey,
 } from "../../src/constants"
+import { PhoneModel } from "../../src/types"
 import {
-  PhoneModel,
   DeletePhoneRequest,
-  EditPhoneRequest,
+  EditMutateRequest,
+  OptimisticUpdateContext,
+  OptimisticDeleteContext,
   DetailScreenRouteParams,
-} from "../../src/types"
+} from "./types"
 import { fetchApi } from "../../src/api"
+import { cacheConfig } from "../../src/config"
 
 const getPhone = (slug: string) => async () => {
   const res = await fetchApi(`/phones/${slug}`)
@@ -26,11 +29,6 @@ const deletePhone = async (phone: DeletePhoneRequest): Promise<PhoneModel> => {
   return json.data
 }
 
-interface EditMutateRequest {
-  formData: EditPhoneRequest
-  phoneId: PhoneModel["id"]
-}
-
 const updatePhone = async (
   updatePhoneRequest: EditMutateRequest,
 ): Promise<PhoneModel> => {
@@ -42,17 +40,10 @@ const updatePhone = async (
   return json.data
 }
 
-interface DeleteContext {
-  previousPhone: PhoneModel | undefined | null
-  previousListPhones: PhoneModel[] | undefined | null
-  phone: DeletePhoneRequest
-}
-
-type OptimisticDeleteContext = DeleteContext | undefined | null
-
 const useOptimisticDelete = () => {
   const queryClient = useQueryClient()
   return {
+    ...cacheConfig,
     onMutate: async (phone: DeletePhoneRequest) => {
       const phoneUpdateKey = formatDetailPhoneCacheKey(phone.data.slug)
       await queryClient.cancelQueries(phoneUpdateKey)
@@ -74,11 +65,18 @@ const useOptimisticDelete = () => {
       if (previousListPhones) {
         queryClient.setQueryData(
           CATALOG_CACHE_KEY,
-          previousListPhones.filter((oldPhone: PhoneModel) => {
-            return phone.data.id === oldPhone.id
-          }),
+          (old: PhoneModel[] | undefined) => {
+            if (old) {
+              return previousListPhones.filter((oldPhone: PhoneModel) => {
+                return phone.data.id === oldPhone.id
+              })
+            } else {
+              return []
+            }
+          },
         )
       }
+      phone.onSucess()
       return { previousPhone, previousListPhones, phone }
     },
 
@@ -98,33 +96,18 @@ const useOptimisticDelete = () => {
       }
     },
 
-    onSettled: (
-      phone: PhoneModel | undefined,
-      _error: unknown,
-      variables: DeletePhoneRequest,
-    ) => {
-      if (phone) {
-        queryClient.invalidateQueries(formatDetailPhoneCacheKey(phone.slug))
-      }
+    onSuccess: (_phone: PhoneModel, _variables: DeletePhoneRequest) => {
       queryClient.invalidateQueries(CATALOG_CACHE_KEY)
-      variables.onSucess()
     },
   }
 }
-
-interface UpdateContext {
-  previousPhone: PhoneModel | undefined | null
-  previousListPhones: PhoneModel[] | undefined | null
-  updatePhone: EditMutateRequest
-}
-
-type OptimisticUpdateContext = UpdateContext | undefined | null
 
 const useOptimisticUpdate = () => {
   const queryClient = useQueryClient()
   const history = useHistory()
   const { slugPhoneName } = useParams<DetailScreenRouteParams>()
   return {
+    ...cacheConfig,
     onMutate: async (updatePhone: EditMutateRequest) => {
       const phoneUpdateKey = formatDetailPhoneCacheKey(slugPhoneName)
       await queryClient.cancelQueries(CATALOG_CACHE_KEY)
@@ -198,6 +181,7 @@ export const useShowOnePhone = () => {
   return useQuery<PhoneModel>(
     formatDetailPhoneCacheKey(slugPhoneName),
     getPhone(slugPhoneName),
+    { ...cacheConfig },
   )
 }
 

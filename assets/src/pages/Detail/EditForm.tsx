@@ -1,8 +1,8 @@
 import { Link, useParams } from "react-router-dom"
 import { useUpdatePhone, useShowOnePhone } from "./hooks"
 import { PhoneForm, PhoneFormLoading } from "../../components/PhoneForm"
-import { EditPhoneRequest, DetailScreenRouteParams } from "../../src/types"
-import { validateEditPhoneForm } from "../../src/validateForms"
+import { EditPhoneRequest, DetailScreenRouteParams } from "./types"
+import { validateEditPhoneForm } from "./validateForm"
 import MainLayout, {
   MainHeaderLayout,
   MainErrorMessage,

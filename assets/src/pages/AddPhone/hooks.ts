@@ -4,8 +4,10 @@ import {
   CATALOG_CACHE_KEY,
   formatDetailPhoneCacheKey,
 } from "../../src/constants"
-import { PhoneModel, CreatePhoneRequest } from "../../src/types"
+import { PhoneModel } from "../../src/types"
+import { CreatePhoneRequest } from "./types"
 import { fetchApi } from "../../src/api"
+import { cacheConfig } from "../../src/config"
 
 const createPhone = async (
   createPhoneRequest: CreatePhoneRequest,
@@ -22,6 +24,7 @@ const useOptimisticAdd = () => {
   const queryClient = useQueryClient()
   const history = useHistory()
   return {
+    ...cacheConfig,
     onSuccess: async (phone: PhoneModel) => {
       const phoneUpdateKey = formatDetailPhoneCacheKey(phone.slug)
       await queryClient.cancelQueries(phoneUpdateKey)
