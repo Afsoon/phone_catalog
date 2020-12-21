@@ -3,7 +3,7 @@ import { useDeletePhone, useShowOnePhone } from "./hooks"
 import { DeleteButton } from "../../components/DeleteAction"
 import { useCallback } from "react"
 import { DialogStateReturn } from "reakit/Dialog"
-import { PhoneModel } from "../../src/types"
+import { PhoneModel, DetailScreenRouteState } from "../../src/types"
 import MainLayout, {
   MainHeaderLayout,
   MainHeaderActionsLayout,
@@ -57,7 +57,7 @@ const EditPhone: React.FC<EditPhoneProps> = ({ slug, name }) => {
 const DetailContent: React.FC = () => {
   const { data, isLoading, isError } = useShowOnePhone()
   const deletePhone = useDeletePhone()
-  const location = useLocation<{ phoneName: string }>()
+  const location = useLocation<DetailScreenRouteState>()
   const history = useHistory()
   const onClick = useCallback(
     (dialogState: DialogStateReturn, data: PhoneModel) => {

@@ -8,16 +8,18 @@ import {
   PhoneModel,
   DeletePhoneRequest,
   EditPhoneRequest,
+  DetailScreenRouteParams,
 } from "../../src/types"
+import { fetchApi } from "../../src/api"
 
 const getPhone = (slug: string) => async () => {
-  const res = await fetch(`http://localhost:3000/phones/${slug}`, {})
+  const res = await fetchApi(`/phones/${slug}`)
   const json = await res.json()
   return json.data
 }
 
 const deletePhone = async (phone: DeletePhoneRequest): Promise<PhoneModel> => {
-  const res = await fetch(`http://localhost:3000/phones/${phone.data.id}`, {
+  const res = await fetchApi(`/phones/${phone.data.id}`, {
     method: "DELETE",
   })
   const json = await res.json()
@@ -32,13 +34,10 @@ interface EditMutateRequest {
 const updatePhone = async (
   updatePhoneRequest: EditMutateRequest,
 ): Promise<PhoneModel> => {
-  const res = await fetch(
-    `http://localhost:3000/phones/${updatePhoneRequest.phoneId}`,
-    {
-      method: "PUT",
-      body: JSON.stringify(updatePhoneRequest.formData),
-    },
-  )
+  const res = await fetchApi(`/phones/${updatePhoneRequest.phoneId}`, {
+    method: "PUT",
+    body: JSON.stringify(updatePhoneRequest.formData),
+  })
   const json = await res.json()
   return json.data
 }
@@ -124,7 +123,7 @@ type OptimisticUpdateContext = UpdateContext | undefined | null
 const useOptimisticUpdate = () => {
   const queryClient = useQueryClient()
   const history = useHistory()
-  const { slugPhoneName } = useParams<{ slugPhoneName: string }>()
+  const { slugPhoneName } = useParams<DetailScreenRouteParams>()
   return {
     onMutate: async (updatePhone: EditMutateRequest) => {
       const phoneUpdateKey = formatDetailPhoneCacheKey(slugPhoneName)
@@ -195,7 +194,7 @@ const useOptimisticUpdate = () => {
 }
 
 export const useShowOnePhone = () => {
-  const { slugPhoneName } = useParams<{ slugPhoneName: string }>()
+  const { slugPhoneName } = useParams<DetailScreenRouteParams>()
   return useQuery<PhoneModel>(
     formatDetailPhoneCacheKey(slugPhoneName),
     getPhone(slugPhoneName),

@@ -4,9 +4,10 @@ import {
   formatDetailPhoneCacheKey,
 } from "../../src/constants"
 import { PhoneModel } from "../../src/types"
+import { fetchApi } from "../../src/api"
 
 const getPhones = async () => {
-  const res = await fetch("http://localhost:3000/phones", {})
+  const res = await fetchApi("/phones", {})
   const json = await res.json()
   return json.data
 }

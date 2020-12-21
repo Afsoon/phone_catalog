@@ -5,11 +5,12 @@ import {
   formatDetailPhoneCacheKey,
 } from "../../src/constants"
 import { PhoneModel, CreatePhoneRequest } from "../../src/types"
+import { fetchApi } from "../../src/api"
 
 const createPhone = async (
   createPhoneRequest: CreatePhoneRequest,
 ): Promise<PhoneModel> => {
-  const res = await fetch("http://localhost:3000/phones", {
+  const res = await fetchApi("/phones", {
     method: "POST",
     body: JSON.stringify(createPhoneRequest),
   })

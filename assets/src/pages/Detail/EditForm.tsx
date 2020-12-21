@@ -1,7 +1,7 @@
 import { Link, useParams } from "react-router-dom"
 import { useUpdatePhone, useShowOnePhone } from "./hooks"
 import { PhoneForm, PhoneFormLoading } from "../../components/PhoneForm"
-import { EditPhoneRequest } from "../../src/types"
+import { EditPhoneRequest, DetailScreenRouteParams } from "../../src/types"
 import { validateEditPhoneForm } from "../../src/validateForms"
 import MainLayout, {
   MainHeaderLayout,
@@ -42,7 +42,7 @@ const BackButton: React.FC<BackButtonProps> = ({ to, children }) => {
 
 export const EditForm = () => {
   const { data, isError, isLoading } = useShowOnePhone()
-  const { slugPhoneName } = useParams<{ slugPhoneName: string }>()
+  const { slugPhoneName } = useParams<DetailScreenRouteParams>()
   const updatePhone = useUpdatePhone()
   const submitForm = (values: EditPhoneRequest) => {
     updatePhone.mutate({ formData: values, phoneId: id })
