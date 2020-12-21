@@ -11,15 +11,18 @@ export interface PhoneModel {
   slug: string
 }
 
-export interface CreatePhoneRequest {
+export interface EditPhoneRequest {
   name: string
   manufacturer: string
   description: string
   color: string
-  imageFileName: File
   screen: string
   ram: number
   price: number
+}
+
+export interface CreatePhoneRequest extends EditPhoneRequest {
+  imageFileName: File
 }
 
 export interface DetailScreenRouteParams {
@@ -34,5 +37,3 @@ export interface DeletePhoneRequest {
   onSucess: () => void
   data: PhoneModel
 }
-
-export type UpdatePhoneRequest = Partial<CreatePhoneRequest>

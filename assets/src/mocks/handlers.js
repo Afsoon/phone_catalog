@@ -184,7 +184,10 @@ export const handlers = [
     return res(ctx.json(responseStructure(phone)))
   }),
   rest.put("/phones/:phoneId", (req, res, ctx) => {
+    const body = JSON.parse(req.body)
     const phone = findById(req.params.phoneId)
-    return res(ctx.json(responseStructure({ ...phone, ...req.body })))
+    const newData = { ...phone, ...body }
+    phonesWithSlugName[phone.id] = newData
+    return res(ctx.json(responseStructure(newData)))
   }),
 ]
