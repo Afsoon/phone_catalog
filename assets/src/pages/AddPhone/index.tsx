@@ -40,7 +40,19 @@ const BackButton: React.FC = ({ children }) => {
 const Content = () => {
   const addPhone = useAddPhone()
   const submitForm = (values: CreatePhoneRequest) => {
-    addPhone.mutate(values)
+    const reader: FileReader = new FileReader()
+    const file = values.imageFileName.item(0) as File
+
+    reader.onload = (ev) => {
+      console.log(ev)
+      const binary = ev.target?.result
+      if (binary) {
+        const base64Text = btoa(binary as string)
+        addPhone.mutate(Object.assign(values, { imgBase64: base64Text }))
+      }
+    }
+
+    reader.readAsDataURL(file)
   }
 
   if (addPhone.isError) {

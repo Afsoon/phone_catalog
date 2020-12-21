@@ -1,4 +1,5 @@
 import { EditPhoneRequest } from "../../Detail/types"
 export interface CreatePhoneRequest extends EditPhoneRequest {
-  imageFileName: File
+  imageFileName: FileList
+  imgBase64?: string
 }

@@ -1,4 +1,4 @@
-export const msgErrorsPhoneForm = {
+export const msgErrorsPhoneForm: Record<string, string> = {
   name: "Insert the phone's name",
   description: "Insert the phone's description",
   price: "Insert the phone's price",
