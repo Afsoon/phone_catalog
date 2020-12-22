@@ -60,6 +60,14 @@ export const PhoneFormLoading: React.FC<PhoneFormProps> = ({
                 <Field
                   register={register}
                   required
+                  name="manufacturer"
+                  label="Manufacturer"
+                  type="text"
+                  className="bg-blue-400 rounded flex-1 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 sm:text-sm border-gray-300"
+                />
+                <Field
+                  register={register}
+                  required
                   name="ram"
                   label="RAM"
                   type="number"
@@ -174,6 +182,15 @@ export const PhoneForm: React.FC<PhoneFormProps> = ({
                   required
                   name="screen"
                   label="Screen"
+                  type="text"
+                  className="flex-1 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-md sm:text-sm border-gray-300"
+                />
+                <Field
+                  register={register}
+                  errors={errors}
+                  required
+                  name="manufacturer"
+                  label="Manufacturer"
                   type="text"
                   className="flex-1 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-md sm:text-sm border-gray-300"
                 />

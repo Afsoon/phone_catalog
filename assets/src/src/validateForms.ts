@@ -1,6 +1,7 @@
 export const msgErrorsPhoneForm: Record<string, string> = {
   name: "Insert the phone's name",
   description: "Insert the phone's description",
+  manufacturer: "Inserthe the phone's manufacturer",
   price: "Insert the phone's price",
   ram: "Insert the phone's RAM",
   screen: "Insert the phone's screen",

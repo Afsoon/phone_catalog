@@ -14,7 +14,7 @@ const createPhone = async (
 ): Promise<PhoneModel> => {
   const res = await fetchApi("/phones", {
     method: "POST",
-    body: JSON.stringify(createPhoneRequest),
+    body: JSON.stringify({ phone: createPhoneRequest }),
   })
   const json = await res.json()
   return json.data
@@ -26,6 +26,7 @@ const useOptimisticAdd = () => {
   return {
     ...cacheConfig,
     onSuccess: async (phone: PhoneModel) => {
+      console.log(phone)
       const phoneUpdateKey = formatDetailPhoneCacheKey(phone.slug)
       await queryClient.cancelQueries(phoneUpdateKey)
       await queryClient.cancelQueries(CATALOG_CACHE_KEY)
@@ -47,7 +48,6 @@ const useOptimisticAdd = () => {
           },
         )
       }
-
       queryClient.setQueryData(formatDetailPhoneCacheKey(phone.slug), phone)
       history.push(`/phone/${phone.slug}`, { phoneName: phone.name })
     },

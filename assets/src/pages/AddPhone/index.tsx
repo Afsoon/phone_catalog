@@ -40,14 +40,12 @@ const Content = () => {
   const addPhone = useAddPhone()
   const submitForm = (values: CreatePhoneRequest) => {
     const reader: FileReader = new FileReader()
-    const file = values.imageFileName.item(0) as File
-
+    const file = (values.imageFileName as FileList).item(0) as File
     reader.onload = (ev) => {
-      console.log(ev)
+      console.log(ev.target?.result)
       const binary = ev.target?.result
       if (binary) {
-        const base64Text = btoa(binary as string)
-        addPhone.mutate(Object.assign(values, { imgBase64: base64Text }))
+        addPhone.mutate(Object.assign(values, { imageFileName: binary }))
       }
     }
 

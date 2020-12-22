@@ -10,7 +10,16 @@ defmodule PhoneCatalogWeb.Router do
   end
 
   pipeline :api do
+    plug CORSPlug, origin: ["http://localhost:3000", "http://localhost:3001"]
     plug :accepts, ["json"]
+  end
+
+  scope "/api", PhoneCatalogWeb do
+    pipe_through :api
+
+    resources "/phones", PhoneController
+    options "/phones", PhoneController, :options
+    options "/phones/:id", PhoneController, :options
   end
 
   scope "/", PhoneCatalogWeb do

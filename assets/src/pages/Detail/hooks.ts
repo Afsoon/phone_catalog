@@ -34,7 +34,7 @@ const updatePhone = async (
 ): Promise<PhoneModel> => {
   const res = await fetchApi(`/phones/${updatePhoneRequest.phoneId}`, {
     method: "PUT",
-    body: JSON.stringify(updatePhoneRequest.formData),
+    body: JSON.stringify({ phone: updatePhoneRequest.formData }),
   })
   const json = await res.json()
   return json.data
